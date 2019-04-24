@@ -1,74 +1,148 @@
-import { Component, Prop, Element } from '@stencil/core';
+import { Component, Element } from '@stencil/core';
 
 @Component({
   tag: 'my-component',
-  styleUrl: 'my-component.css',
-  shadow: true
+  styleUrl: 'my-component.scss'
 })
 export class MyComponent {
   @Element() el!: HTMLStencilElement;
   arrColunas = [
     {
-      nome: 'Nome',
+      nome: 'Pacote/Oferta/Produto',
       campo: 'nome',
-      colBotaoExpandir: true
+      colBotaoExpandir: true,
+      marginNivel: true,
+      tipo: 'valor'
     },
     {
-      nome: 'Telefone',
-      campo: 'telefone',
-      colBotaoExpandir: false
+      nome: 'Tipo',
+      campo: 'tipo',
+      colBotaoExpandir: false,
+      tipo: 'valor'
+    },
+    {
+      nome: 'Quantidade',
+      campo: 'qtd',
+      colBotaoExpandir: false,
+      tipo: 'valor'
+    },
+    {
+      nome: 'Unidade',
+      campo: 'un',
+      colBotaoExpandir: false,
+      tipo: 'valor'
+    },
+    {
+      nome: 'Valor',
+      campo: 'valor',
+      colBotaoExpandir: false,
+      marginNivel: true,
+      tipo: 'valor'
+    },
+    {
+      nome: 'Opções',
+      campo: null,
+      colBotaoExpandir: false,
+      tipo: 'botoes',
+      botoes: [
+        {
+          valor: 'Adicionar',
+          iconeFa: 'fa-add',
+          classe: 'btn-add',
+          //Nível 0 é o título
+          niveis: [
+            0, 1, 2
+          ],
+          fOnClick: {
+            params: {
+              url: 'www.teste.com.br'
+            },
+            funcao: (params: any) => {
+              console.log(params);
+            }
+          }
+
+        }
+      ]
     }
   ];
 
   arrDados = [
     {
-      nome: 'João',
-      telefone: '(21)1234-4321',
-      aberto: true,
+      nome: 'Velório Itaú 3000',
+      tipo: 'Pacote',
+      qtd: null,
+      un: null,
+      valor: 4600,
+      aberto: false,
       filhos: [
         {
-          nome: 'Cleber',
-          telefone: '(22)1234-5678',
-          aberto: false,
-          filhos: null
-        },
-        {
-          nome: 'Gabriela',
-          telefone: '(21)92572-4381',
+          nome: 'Velório',
+          tipo: 'Oferta',
+          qtd: 4,
+          un: 'hh',
+          valor: 3000,
           aberto: false,
           filhos: [
             {
-              nome: 'Henrique',
-              telefone: '(99)97814-5624',
+              nome: 'Ornamentação',
+              tipo: 'Componente',
+              qtd: 1,
+              un: 'hh',
+              valor: 1500,
+              aberto: false,
+              filhos: null
+            },
+            {
+              nome: 'Acompanhamento',
+              tipo: 'Componente',
+              qtd: 4,
+              un: 'hh',
+              valor: 500,
+              aberto: false,
+              filhos: null
+            },{
+              nome: 'Ornamentação',
+              tipo: 'Produto',
+              qtd: 1,
+              un: 'hh',
+              valor: 1000,
               aberto: false,
               filhos: null
             }
           ]
+        },
+        {
+          nome: 'Cortejo',
+          tipo: 'Oferta',
+          qtd: 1,
+          un: 'hh',
+          valor: 600,
+          aberto: false,
+          filhos: null
+        },
+        {
+          nome: 'Sepultamento',
+          tipo: 'Oferta',
+          qtd: 1,
+          un: 'hh',
+          valor: 1600,
+          aberto: false,
+          filhos: null
         }
       ]
     },
     {
-      nome: 'Maria',
-      telefone: '(21)2233-3322',
+      nome: 'Velório FMA 002',
+      tipo: 'Pacote',
+      qtd: null,
+      un: null,
+      valor: 4600,
       aberto: false,
       filhos: null
     },
   ];
 
-  /**
-   * The first name
-   */
-  @Prop() first: string;
-
-  /**
-   * The middle name
-   */
-  @Prop() middle: string;
-
-  /**
-   * The last name
-   */
-  @Prop() last: string;
 
   /**
    * Renderiza a lista de dados da tabela
@@ -110,26 +184,84 @@ export class MyComponent {
     }
   }
 
+  /**
+   * Renderiza a coluna do título
+   * @param dados 
+   * @param col 
+   * @param nivel 
+   */
+  renderColTitulo(dados, col){
+    let nivel = 0;
+    let classesTD = 'nivel-' + nivel + ' ' + col.campo;
+
+    if (col.tipo == 'valor'){
+      return <th class={classesTD}>{col.nome}</th>
+    }
+    else if (col.tipo == 'botoes'){
+      return this.renderColBotoes(dados, col, nivel)
+    }
+  }
+
+  /**
+   * Renderiza a coluna das linhas de dados
+   * @param dados 
+   * @param col 
+   * @param nivel 
+   */
   renderCol(dados, col, nivel){
     let classesTD = 'nivel-' + nivel + ' ' + col.campo;
 
-    if (col.colBotaoExpandir){
+    if (col.marginNivel){
       classesTD += ' col-margin-nivel';
     }
     
-    if (col.colBotaoExpandir == true && dados.filhos != null){
-      return <td class={classesTD}>
-        <label onClick={() => this.controlaExpansao(dados, !dados.aberto)} class="btn-expandir">
-          {dados.aberto ? ' - ': ' + '}
-        </label>
-        {dados[col.campo]}
-      </td>
+    //Coluna para apresentar valores
+    if (col.tipo == 'valor'){
+      if (col.colBotaoExpandir == true && dados.filhos != null){
+        return <td class={classesTD}>
+          <label onClick={() => this.controlaExpansao(dados, !dados.aberto)} class="btn-expandir">
+            {dados.aberto ? ' - ': ' + '}
+          </label>
+          {dados[col.campo]}
+        </td>
+      }
+      else{
+        return <td class={classesTD}>
+          {dados[col.campo]}
+        </td>
+      }
     }
-    else{
-      return <td class={classesTD}>
-        {dados[col.campo]}
-      </td>
+    //Coluna para adicionar botões
+    else if (col.tipo == 'botoes'){
+      return this.renderColBotoes(dados, col, nivel)
     }
+  }
+
+  /**
+   * Renderiza a coluna do tipo "botões"
+   * @param dados 
+   * @param col 
+   * @param nivel 
+   */
+  renderColBotoes(dados, col, nivel){
+    let classesTD = 'nivel-' + nivel + ' ' + col.campo;
+
+    return <td class={classesTD}>
+      {col.botoes.map(botao => {
+        //Verifico se o botão está configurado para o nível atual
+        if (botao.niveis.find((n) => {return (n == nivel)}) != undefined){
+          let params = {
+            dadosFixos: botao.fOnClick.params,
+            dadosColuna: {
+              item: dados,
+              nivel: nivel
+            }
+          }
+  
+          return <button class={botao.classe} onClick={() => botao.fOnClick.funcao(params)}>{botao.valor}</button>
+        }
+      })}
+    </td>
   }
 
   /**
@@ -149,7 +281,7 @@ export class MyComponent {
           <thead>
             <tr>
               {this.arrColunas.map((col) => {
-                return <th>{col.nome}</th>
+                return this.renderColTitulo(this.arrDados, col)
               })}
             </tr>
           </thead>
