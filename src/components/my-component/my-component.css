@@ -1,1 +1,13 @@
-
+table{
+    text-align: left;
+}
+.nivel-2.col-margin-nivel{
+    padding-left: 30px;
+}
+.nivel-3.col-margin-nivel{
+    padding-left: 60px;
+}
+.btn-expandir{
+    display: inline-block;
+    font-size: 15px;
+}
