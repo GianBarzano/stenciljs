@@ -198,6 +198,24 @@ export class MyComponent {
     }
   }
 
+  /**
+   * Renderiza a coluna do título
+   * @param dados 
+   * @param col 
+   * @param nivel 
+   */
+  renderColTitulo(dados, col){
+    let nivel = 0;
+    let classesTD = 'nivel-' + nivel + ' ' + col.campo;
+
+    if (col.tipo == 'valor'){
+      return <th class={classesTD}>{col.nome}</th>
+    }
+    else if (col.tipo == 'botoes'){
+      return this.renderColBotoes(dados, col, nivel)
+    }
+  }
+
   renderCol(dados, col, nivel){
     let classesTD = 'nivel-' + nivel + ' ' + col.campo;
 
@@ -269,7 +287,8 @@ export class MyComponent {
           <thead>
             <tr>
               {this.arrColunas.map((col) => {
-                return <th>{col.nome}</th>
+                return this.renderColTitulo(this.arrDados, col)
+                
               })}
             </tr>
           </thead>
