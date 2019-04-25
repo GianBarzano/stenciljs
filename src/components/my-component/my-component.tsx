@@ -219,13 +219,17 @@ export class MyComponent {
   renderCol(dados, col, nivel){
     let classesTD = 'nivel-' + nivel + ' ' + col.campo;
 
-    if (col.colBotaoExpandir){
+    let styles = {}
+    if (col.marginNivel){
+      styles = {
+        'padding-left': 20 * (nivel -1) + 'px'
+      }
       classesTD += ' col-margin-nivel';
     }
     
     if (col.tipo == 'valor'){
       if (col.colBotaoExpandir == true && dados.filhos != null){
-        return <td class={classesTD}>
+        return <td class={classesTD} style={styles}>
           <label onClick={() => this.controlaExpansao(dados, !dados.aberto)} class="btn-expandir">
             {dados.aberto ? ' - ': ' + '}
           </label>
@@ -233,7 +237,7 @@ export class MyComponent {
         </td>
       }
       else{
-        return <td class={classesTD}>
+        return <td class={classesTD} style={styles}>
           {dados[col.campo]}
         </td>
       }
