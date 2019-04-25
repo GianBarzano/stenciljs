@@ -1,10 +1,10 @@
-import { Component, Prop, Element } from '@stencil/core';
+import { Component, Element } from '@stencil/core';
 
 @Component({
-  tag: 'my-component',
+  tag: 'my-component1',
   styleUrl: 'my-component.scss'
 })
-export class MyComponent {
+export class MyComponent1 {
   @Element() el!: HTMLStencilElement;
   arrColunas = [
     {
@@ -143,20 +143,6 @@ export class MyComponent {
     },
   ];
 
-  /**
-   * The first name
-   */
-  @Prop() first: string;
-
-  /**
-   * The middle name
-   */
-  @Prop() middle: string;
-
-  /**
-   * The last name
-   */
-  @Prop() last: string;
 
   /**
    * Renderiza a lista de dados da tabela
@@ -198,13 +184,38 @@ export class MyComponent {
     }
   }
 
+  /**
+   * Renderiza a coluna do título
+   * @param dados 
+   * @param col 
+   * @param nivel 
+   */
+  renderColTitulo(dados, col){
+    let nivel = 0;
+    let classesTD = 'nivel-' + nivel + ' ' + col.campo;
+
+    if (col.tipo == 'valor'){
+      return <th class={classesTD}>{col.nome}</th>
+    }
+    else if (col.tipo == 'botoes'){
+      return this.renderColBotoes(dados, col, nivel)
+    }
+  }
+
+  /**
+   * Renderiza a coluna das linhas de dados
+   * @param dados 
+   * @param col 
+   * @param nivel 
+   */
   renderCol(dados, col, nivel){
     let classesTD = 'nivel-' + nivel + ' ' + col.campo;
 
-    if (col.colBotaoExpandir){
+    if (col.marginNivel){
       classesTD += ' col-margin-nivel';
     }
     
+    //Coluna para apresentar valores
     if (col.tipo == 'valor'){
       if (col.colBotaoExpandir == true && dados.filhos != null){
         return <td class={classesTD}>
@@ -220,6 +231,7 @@ export class MyComponent {
         </td>
       }
     }
+    //Coluna para adicionar botões
     else if (col.tipo == 'botoes'){
       return this.renderColBotoes(dados, col, nivel)
     }
@@ -269,7 +281,7 @@ export class MyComponent {
           <thead>
             <tr>
               {this.arrColunas.map((col) => {
-                return <th>{col.nome}</th>
+                return this.renderColTitulo(this.arrDados, col)
               })}
             </tr>
           </thead>
