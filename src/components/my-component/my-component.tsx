@@ -230,14 +230,15 @@ export class MyComponent {
     if (col.tipo == 'valor'){
       if (col.colBotaoExpandir == true && dados.filhos != null){
         return <td class={classesTD} style={styles}>
-          <label onClick={() => this.controlaExpansao(dados, !dados.aberto)} class="btn-expandir">
-            {dados.aberto ? ' - ': ' + '}
-          </label>
+          <div class="btn-expandir">
+          <i class={"fas" + (dados.aberto?" fa-arrow-circle-up":" fa-arrow-circle-down")} onClick={() => this.controlaExpansao(dados, !dados.aberto)}></i>
+          </div>
           {dados[col.campo]}
         </td>
       }
       else{
         return <td class={classesTD} style={styles}>
+          <div class="btn-expandir"></div>
           {dados[col.campo]}
         </td>
       }
